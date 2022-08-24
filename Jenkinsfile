@@ -4,16 +4,6 @@ pipeline {
         MAVEN_HOME = tool('maven')
     }
     stages {
-        stage('Check-Git-Secrets') {
-            steps {
-               sh 'whoami'
-               sh 'docker ps -aq'
-               sh 'docker rmi -f $(docker images -aq)'
-               sh 'echo "scanning github repository URL to detect secrets post-push"'
-               sh 'docker run gesellix/trufflehog --json https://github.com/gopichandperugu/Studentapp.git'
-           }
-    }
-    /*stages {*/
         stage('mvn-clean') {
             steps {
                sh 'mvn clean'
@@ -22,12 +12,6 @@ pipeline {
         stage('mvn-compile') {
             steps {
                sh 'mvn compile'
-            }
-        }
-        stage('OWASP-Dependecy-check') {
-            steps {
-               sh 'sudo bash /usr/bin/dependency-check.sh --scan ./../Studentapp/'
-               sh 'cat /var/lib/jenkins/workspace/DevSecOps/Studentapp/./dependency-check-report.html'
             }
         }
         stage('SAST-with-sonar'){
